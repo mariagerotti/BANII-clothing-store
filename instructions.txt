@@ -1,6 +1,3 @@
-# BANII-clothing-store
-
-```
 LOJA DE ROUPAS - INSTRUCOES DE COMPILACAO E EXECUCAO
 ====================================================
 
@@ -63,4 +60,3 @@ Na raiz do projeto (pasta onde esta o pom.xml):
 ------
 A aplicacao roda no console e exibe um menu numerado.
 Digite o numero da opcao desejada; a opcao 0 encerra o sistema.
-```
