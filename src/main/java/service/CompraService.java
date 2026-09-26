@@ -71,7 +71,7 @@ public class CompraService {
                 continue;
             }
 
-            int qtd = InputUtil.lerInt("Informe a quantidade comprada: ");
+            int qtd = InputUtil.lerIntPositivo("Informe a quantidade comprada: ");
             BigDecimal precoUnit = InputUtil.lerBigDecimal("Informe o preço unitário (atacado): ");
 
             ItemCompra item = new ItemCompra();

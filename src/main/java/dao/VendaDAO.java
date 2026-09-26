@@ -67,7 +67,7 @@ public class VendaDAO {
         return vendas;
     }
 
-    public void atualizar(Venda venda) {
+    public boolean atualizar(Venda venda) {
         String sql = "UPDATE venda SET data_venda = ?, valor_total = ?, id_cliente = ? WHERE id_venda = ?";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -75,20 +75,22 @@ public class VendaDAO {
             stmt.setBigDecimal(2, venda.getValorTotal());
             stmt.setInt(3, venda.getIdCliente());
             stmt.setInt(4, venda.getIdVenda());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao atualizar venda: " + e.getMessage());
+            return false;
         }
     }
 
-    public void excluir(int id) {
+    public boolean excluir(int id) {
         String sql = "DELETE FROM venda WHERE id_venda = ?";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao excluir venda: " + e.getMessage());
+            return false;
         }
     }
 

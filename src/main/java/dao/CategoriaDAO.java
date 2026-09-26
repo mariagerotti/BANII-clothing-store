@@ -15,15 +15,16 @@ import java.util.List;
  */
 public class CategoriaDAO {
 
-    public void inserir(Categoria categoria) {
+    public boolean inserir(Categoria categoria) {
         String sql = "INSERT INTO categoria (nome, descricao) VALUES (?, ?)";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, categoria.getNome());
             stmt.setString(2, categoria.getDescricao());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao inserir categoria: " + e.getMessage());
+            return false;
         }
     }
 
@@ -66,27 +67,29 @@ public class CategoriaDAO {
         return categorias;
     }
 
-    public void atualizar(Categoria categoria) {
+    public boolean atualizar(Categoria categoria) {
         String sql = "UPDATE categoria SET nome = ?, descricao = ? WHERE id_categoria = ?";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, categoria.getNome());
             stmt.setString(2, categoria.getDescricao());
             stmt.setInt(3, categoria.getIdCategoria());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao atualizar categoria: " + e.getMessage());
+            return false;
         }
     }
 
-    public void excluir(int id) {
+    public boolean excluir(int id) {
         String sql = "DELETE FROM categoria WHERE id_categoria = ?";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao excluir categoria: " + e.getMessage());
+            return false;
         }
     }
 }

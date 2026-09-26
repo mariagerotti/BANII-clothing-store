@@ -71,7 +71,7 @@ public class VendaService {
                 continue;
             }
 
-            int qtd = InputUtil.lerInt("Informe a quantidade: ");
+            int qtd = InputUtil.lerIntPositivo("Informe a quantidade: ");
             if (produto.getQuantidadeEstoque() < qtd) {
                 System.out.println("Estoque insuficiente. Quantidade disponível: " + produto.getQuantidadeEstoque());
                 continue;

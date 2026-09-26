@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class ProdutoDAO {
 
-    public void inserir(Produto produto) {
+    public boolean inserir(Produto produto) {
         String sql = "INSERT INTO produto (nome, descricao, preco, tamanho, quantidade_estoque, cor, id_marca, id_categoria) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -27,9 +27,10 @@ public class ProdutoDAO {
             stmt.setString(6, produto.getCor());
             stmt.setInt(7, produto.getIdMarca());
             stmt.setInt(8, produto.getIdCategoria());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao inserir produto: " + e.getMessage());
+            return false;
         }
     }
 
@@ -84,7 +85,7 @@ public class ProdutoDAO {
         return produtos;
     }
 
-    public void atualizar(Produto produto) {
+    public boolean atualizar(Produto produto) {
         String sql = "UPDATE produto SET nome = ?, descricao = ?, preco = ?, tamanho = ?, quantidade_estoque = ?, cor = ?, id_marca = ?, id_categoria = ? WHERE id_produto = ?";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -97,20 +98,22 @@ public class ProdutoDAO {
             stmt.setInt(7, produto.getIdMarca());
             stmt.setInt(8, produto.getIdCategoria());
             stmt.setInt(9, produto.getIdProduto());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao atualizar produto: " + e.getMessage());
+            return false;
         }
     }
 
-    public void excluir(int id) {
+    public boolean excluir(int id) {
         String sql = "DELETE FROM produto WHERE id_produto = ?";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao excluir produto: " + e.getMessage());
+            return false;
         }
     }
 

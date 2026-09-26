@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class ClienteDAO {
 
-    public void inserir(Cliente cliente) {
+    public boolean inserir(Cliente cliente) {
         String sql = "INSERT INTO cliente (nome, cpf, telefone, email, endereco) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -24,9 +24,10 @@ public class ClienteDAO {
             stmt.setString(3, cliente.getTelefone());
             stmt.setString(4, cliente.getEmail());
             stmt.setString(5, cliente.getEndereco());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao inserir cliente: " + e.getMessage());
+            return false;
         }
     }
 
@@ -75,7 +76,7 @@ public class ClienteDAO {
         return clientes;
     }
 
-    public void atualizar(Cliente cliente) {
+    public boolean atualizar(Cliente cliente) {
         String sql = "UPDATE cliente SET nome = ?, cpf = ?, telefone = ?, email = ?, endereco = ? WHERE id_cliente = ?";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -85,20 +86,22 @@ public class ClienteDAO {
             stmt.setString(4, cliente.getEmail());
             stmt.setString(5, cliente.getEndereco());
             stmt.setInt(6, cliente.getIdCliente());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao atualizar cliente: " + e.getMessage());
+            return false;
         }
     }
 
-    public void excluir(int id) {
+    public boolean excluir(int id) {
         String sql = "DELETE FROM cliente WHERE id_cliente = ?";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao excluir cliente: " + e.getMessage());
+            return false;
         }
     }
 }

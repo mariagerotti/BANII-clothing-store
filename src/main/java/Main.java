@@ -72,12 +72,15 @@ public class Main {
                 case 1:
                     Cliente cNovo = new Cliente();
                     cNovo.setNome(InputUtil.lerString("Nome: "));
-                    cNovo.setCpf(InputUtil.lerString("CPF: "));
-                    cNovo.setTelefone(InputUtil.lerString("Telefone: "));
+                    cNovo.setCpf(InputUtil.lerCpf("CPF: "));
+                    cNovo.setTelefone(InputUtil.lerTelefone("Telefone: "));
                     cNovo.setEmail(InputUtil.lerString("Email: "));
                     cNovo.setEndereco(InputUtil.lerString("Endereço: "));
-                    clienteDAO.inserir(cNovo);
-                    System.out.println("Cliente cadastrado com sucesso!");
+                    if (clienteDAO.inserir(cNovo)) {
+                        System.out.println("Cliente cadastrado com sucesso!");
+                    } else {
+                        System.out.println("Não foi possível cadastrar o cliente. Verifique se o CPF já está cadastrado.");
+                    }
                     break;
                 case 2:
                     List<Cliente> clientes = clienteDAO.listarTodos();
@@ -110,10 +113,10 @@ public class Main {
                         String nome = InputUtil.lerStringOpcional("Nome [" + cAtualizar.getNome() + "]: ");
                         if (!nome.isEmpty()) cAtualizar.setNome(nome);
                         
-                        String cpf = InputUtil.lerStringOpcional("CPF [" + cAtualizar.getCpf() + "]: ");
+                        String cpf = InputUtil.lerCpfOpcional("CPF [" + cAtualizar.getCpf() + "]: ");
                         if (!cpf.isEmpty()) cAtualizar.setCpf(cpf);
                         
-                        String telefone = InputUtil.lerStringOpcional("Telefone [" + cAtualizar.getTelefone() + "]: ");
+                        String telefone = InputUtil.lerTelefoneOpcional("Telefone [" + cAtualizar.getTelefone() + "]: ");
                         if (!telefone.isEmpty()) cAtualizar.setTelefone(telefone);
                         
                         String email = InputUtil.lerStringOpcional("Email [" + cAtualizar.getEmail() + "]: ");
@@ -122,8 +125,11 @@ public class Main {
                         String endereco = InputUtil.lerStringOpcional("Endereço [" + cAtualizar.getEndereco() + "]: ");
                         if (!endereco.isEmpty()) cAtualizar.setEndereco(endereco);
                         
-                        clienteDAO.atualizar(cAtualizar);
-                        System.out.println("Cliente atualizado com sucesso!");
+                        if (clienteDAO.atualizar(cAtualizar)) {
+                            System.out.println("Cliente atualizado com sucesso!");
+                        } else {
+                            System.out.println("Não foi possível atualizar o cliente. Verifique se o CPF já pertence a outro cliente.");
+                        }
                     } else {
                         System.out.println("Cliente não encontrado.");
                     }
@@ -135,8 +141,11 @@ public class Main {
                         System.out.println("Cliente: " + cExcluir.getNome());
                         String conf = InputUtil.lerString("Confirma exclusão? (s/n): ");
                         if (conf.equalsIgnoreCase("s")) {
-                            clienteDAO.excluir(idExcluir);
-                            System.out.println("Cliente excluído.");
+                            if (clienteDAO.excluir(idExcluir)) {
+                                System.out.println("Cliente excluído.");
+                            } else {
+                                System.out.println("Não foi possível excluir o cliente. Verifique se ele possui vendas registradas.");
+                            }
                         } else {
                             System.out.println("Cancelado.");
                         }
@@ -182,8 +191,11 @@ public class Main {
                     for (Categoria c : categorias) System.out.println(c.getIdCategoria() + " - " + c.getNome());
                     pNovo.setIdCategoria(InputUtil.lerInt("ID da Categoria: "));
 
-                    produtoDAO.inserir(pNovo);
-                    System.out.println("Produto cadastrado com sucesso!");
+                    if (produtoDAO.inserir(pNovo)) {
+                        System.out.println("Produto cadastrado com sucesso!");
+                    } else {
+                        System.out.println("Não foi possível cadastrar o produto. Verifique se a marca e a categoria informadas existem.");
+                    }
                     break;
                 case 2:
                     List<Produto> produtos = produtoDAO.listarTodos();
@@ -216,7 +228,7 @@ public class Main {
                     int idAtualizar = InputUtil.lerInt("ID do produto a atualizar: ");
                     Produto pAtualizar = produtoDAO.buscarPorId(idAtualizar);
                     if (pAtualizar != null) {
-                        System.out.println("Deixe em branco/0 para manter o valor atual.");
+                        System.out.println("Deixe em branco para manter o valor atual (no preço, digite 0 para manter).");
                         
                         String nome = InputUtil.lerStringOpcional("Nome [" + pAtualizar.getNome() + "]: ");
                         if (!nome.isEmpty()) pAtualizar.setNome(nome);
@@ -234,8 +246,11 @@ public class Main {
                         String cor = InputUtil.lerStringOpcional("Cor [" + pAtualizar.getCor() + "]: ");
                         if (!cor.isEmpty()) pAtualizar.setCor(cor);
                         
-                        produtoDAO.atualizar(pAtualizar);
-                        System.out.println("Produto atualizado com sucesso!");
+                        if (produtoDAO.atualizar(pAtualizar)) {
+                            System.out.println("Produto atualizado com sucesso!");
+                        } else {
+                            System.out.println("Não foi possível atualizar o produto.");
+                        }
                     } else {
                         System.out.println("Produto não encontrado.");
                     }
@@ -247,8 +262,11 @@ public class Main {
                         System.out.println("Produto: " + pExcluir.getNome());
                         String conf = InputUtil.lerString("Confirma exclusão? (s/n): ");
                         if (conf.equalsIgnoreCase("s")) {
-                            produtoDAO.excluir(idExcluir);
-                            System.out.println("Produto excluído.");
+                            if (produtoDAO.excluir(idExcluir)) {
+                                System.out.println("Produto excluído.");
+                            } else {
+                                System.out.println("Não foi possível excluir o produto. Verifique se ele possui vendas ou compras registradas.");
+                            }
                         } else {
                             System.out.println("Cancelado.");
                         }
@@ -278,8 +296,11 @@ public class Main {
                 case 1:
                     Marca m = new Marca();
                     m.setNome(InputUtil.lerString("Nome da marca: "));
-                    marcaDAO.inserir(m);
-                    System.out.println("Marca cadastrada!");
+                    if (marcaDAO.inserir(m)) {
+                        System.out.println("Marca cadastrada!");
+                    } else {
+                        System.out.println("Não foi possível cadastrar a marca.");
+                    }
                     break;
                 case 2:
                     for (Marca marca : marcaDAO.listarTodos()) {
@@ -296,8 +317,11 @@ public class Main {
                     if (mAt != null) {
                         String nNome = InputUtil.lerStringOpcional("Nome [" + mAt.getNome() + "]: ");
                         if (!nNome.isEmpty()) mAt.setNome(nNome);
-                        marcaDAO.atualizar(mAt);
-                        System.out.println("Marca atualizada.");
+                        if (marcaDAO.atualizar(mAt)) {
+                            System.out.println("Marca atualizada.");
+                        } else {
+                            System.out.println("Não foi possível atualizar a marca.");
+                        }
                     } else System.out.println("Não encontrada.");
                     break;
                 case 5:
@@ -305,8 +329,13 @@ public class Main {
                     Marca mDel = marcaDAO.buscarPorId(idDel);
                     if (mDel != null) {
                         if (InputUtil.lerString("Confirma exclusão? (s/n): ").equalsIgnoreCase("s")) {
-                            marcaDAO.excluir(idDel);
-                            System.out.println("Excluída.");
+                            if (marcaDAO.excluir(idDel)) {
+                                System.out.println("Excluída.");
+                            } else {
+                                System.out.println("Não foi possível excluir a marca. Verifique se existem produtos vinculados a ela.");
+                            }
+                        } else {
+                            System.out.println("Cancelado.");
                         }
                     } else System.out.println("Não encontrada.");
                     break;
@@ -333,8 +362,11 @@ public class Main {
                     Categoria c = new Categoria();
                     c.setNome(InputUtil.lerString("Nome: "));
                     c.setDescricao(InputUtil.lerString("Descrição: "));
-                    categoriaDAO.inserir(c);
-                    System.out.println("Cadastrada!");
+                    if (categoriaDAO.inserir(c)) {
+                        System.out.println("Cadastrada!");
+                    } else {
+                        System.out.println("Não foi possível cadastrar a categoria.");
+                    }
                     break;
                 case 2:
                     for (Categoria cat : categoriaDAO.listarTodos()) {
@@ -353,8 +385,11 @@ public class Main {
                         if (!nn.isEmpty()) cAt.setNome(nn);
                         String nd = InputUtil.lerStringOpcional("Descrição [" + cAt.getDescricao() + "]: ");
                         if (!nd.isEmpty()) cAt.setDescricao(nd);
-                        categoriaDAO.atualizar(cAt);
-                        System.out.println("Atualizada.");
+                        if (categoriaDAO.atualizar(cAt)) {
+                            System.out.println("Atualizada.");
+                        } else {
+                            System.out.println("Não foi possível atualizar a categoria.");
+                        }
                     } else System.out.println("Não encontrada.");
                     break;
                 case 5:
@@ -362,8 +397,13 @@ public class Main {
                     Categoria cDel = categoriaDAO.buscarPorId(idDel);
                     if (cDel != null) {
                         if (InputUtil.lerString("Confirma exclusão? (s/n): ").equalsIgnoreCase("s")) {
-                            categoriaDAO.excluir(idDel);
-                            System.out.println("Excluída.");
+                            if (categoriaDAO.excluir(idDel)) {
+                                System.out.println("Excluída.");
+                            } else {
+                                System.out.println("Não foi possível excluir a categoria. Verifique se existem produtos vinculados a ela.");
+                            }
+                        } else {
+                            System.out.println("Cancelado.");
                         }
                     } else System.out.println("Não encontrada.");
                     break;
@@ -389,12 +429,15 @@ public class Main {
                 case 1:
                     Fornecedor f = new Fornecedor();
                     f.setNome(InputUtil.lerString("Nome: "));
-                    f.setCnpj(InputUtil.lerString("CNPJ: "));
-                    f.setTelefone(InputUtil.lerString("Telefone: "));
+                    f.setCnpj(InputUtil.lerCnpj("CNPJ: "));
+                    f.setTelefone(InputUtil.lerTelefone("Telefone: "));
                     f.setEmail(InputUtil.lerString("Email: "));
                     f.setEndereco(InputUtil.lerString("Endereço: "));
-                    fornecedorDAO.inserir(f);
-                    System.out.println("Cadastrado!");
+                    if (fornecedorDAO.inserir(f)) {
+                        System.out.println("Cadastrado!");
+                    } else {
+                        System.out.println("Não foi possível cadastrar o fornecedor. Verifique se o CNPJ já está cadastrado.");
+                    }
                     break;
                 case 2:
                     for (Fornecedor forn : fornecedorDAO.listarTodos()) {
@@ -411,16 +454,19 @@ public class Main {
                     if (fAt != null) {
                         String n = InputUtil.lerStringOpcional("Nome [" + fAt.getNome() + "]: ");
                         if (!n.isEmpty()) fAt.setNome(n);
-                        String c = InputUtil.lerStringOpcional("CNPJ [" + fAt.getCnpj() + "]: ");
+                        String c = InputUtil.lerCnpjOpcional("CNPJ [" + fAt.getCnpj() + "]: ");
                         if (!c.isEmpty()) fAt.setCnpj(c);
-                        String t = InputUtil.lerStringOpcional("Telefone [" + fAt.getTelefone() + "]: ");
+                        String t = InputUtil.lerTelefoneOpcional("Telefone [" + fAt.getTelefone() + "]: ");
                         if (!t.isEmpty()) fAt.setTelefone(t);
                         String e = InputUtil.lerStringOpcional("Email [" + fAt.getEmail() + "]: ");
                         if (!e.isEmpty()) fAt.setEmail(e);
                         String end = InputUtil.lerStringOpcional("Endereço [" + fAt.getEndereco() + "]: ");
                         if (!end.isEmpty()) fAt.setEndereco(end);
-                        fornecedorDAO.atualizar(fAt);
-                        System.out.println("Atualizado.");
+                        if (fornecedorDAO.atualizar(fAt)) {
+                            System.out.println("Atualizado.");
+                        } else {
+                            System.out.println("Não foi possível atualizar o fornecedor. Verifique se o CNPJ já pertence a outro fornecedor.");
+                        }
                     } else System.out.println("Não encontrado.");
                     break;
                 case 5:
@@ -428,8 +474,13 @@ public class Main {
                     Fornecedor fDel = fornecedorDAO.buscarPorId(idDel);
                     if (fDel != null) {
                         if (InputUtil.lerString("Confirma exclusão? (s/n): ").equalsIgnoreCase("s")) {
-                            fornecedorDAO.excluir(idDel);
-                            System.out.println("Excluído.");
+                            if (fornecedorDAO.excluir(idDel)) {
+                                System.out.println("Excluído.");
+                            } else {
+                                System.out.println("Não foi possível excluir o fornecedor. Verifique se ele possui compras registradas.");
+                            }
+                        } else {
+                            System.out.println("Cancelado.");
                         }
                     } else System.out.println("Não encontrado.");
                     break;
@@ -458,21 +509,34 @@ public class Main {
                     Compra c = compraDAO.buscarPorId(id);
                     if (c != null) {
                         System.out.println("Data atual: " + c.getDataCompra());
-                        LocalDate novaData = InputUtil.lerData("Nova data (dd/MM/yyyy) ou erro para manter: ");
+                        LocalDate novaData = InputUtil.lerDataPassadaOpcional("Nova data (dd/MM/yyyy) ou deixe em branco para manter: ");
                         if (novaData != null) c.setDataCompra(novaData);
                         System.out.println("Fornecedor atual: " + c.getIdFornecedor());
-                        int fId = InputUtil.lerInt("Novo ID Fornecedor (0 p/ manter): ");
+                        int fId;
+                        while (true) {
+                            fId = InputUtil.lerInt("Novo ID Fornecedor (0 p/ manter): ");
+                            if (fId <= 0 || fornecedorDAO.buscarPorId(fId) != null) break;
+                            System.out.println("Fornecedor não encontrado.");
+                        }
                         if (fId > 0) c.setIdFornecedor(fId);
-                        compraDAO.atualizar(c);
-                        System.out.println("Atualizada.");
+                        if (compraDAO.atualizar(c)) {
+                            System.out.println("Atualizada.");
+                        } else {
+                            System.out.println("Não foi possível atualizar a compra.");
+                        }
                     } else System.out.println("Não encontrada.");
                     break;
                 case 4:
                     int idExcluir = InputUtil.lerInt("ID da compra a excluir: ");
                     if (compraDAO.buscarPorId(idExcluir) != null) {
                         if (InputUtil.lerString("Confirma exclusão (excluirá os itens)? (s/n): ").equalsIgnoreCase("s")) {
-                            compraDAO.excluir(idExcluir);
-                            System.out.println("Excluída.");
+                            if (compraDAO.excluir(idExcluir)) {
+                                System.out.println("Excluída.");
+                            } else {
+                                System.out.println("Não foi possível excluir a compra.");
+                            }
+                        } else {
+                            System.out.println("Cancelado.");
                         }
                     } else System.out.println("Não encontrada.");
                     break;
@@ -501,21 +565,34 @@ public class Main {
                     Venda v = vendaDAO.buscarPorId(id);
                     if (v != null) {
                         System.out.println("Data atual: " + v.getDataVenda());
-                        LocalDate novaData = InputUtil.lerData("Nova data (dd/MM/yyyy) ou erro para manter: ");
+                        LocalDate novaData = InputUtil.lerDataPassadaOpcional("Nova data (dd/MM/yyyy) ou deixe em branco para manter: ");
                         if (novaData != null) v.setDataVenda(novaData);
                         System.out.println("Cliente atual: " + v.getIdCliente());
-                        int cId = InputUtil.lerInt("Novo ID Cliente (0 p/ manter): ");
+                        int cId;
+                        while (true) {
+                            cId = InputUtil.lerInt("Novo ID Cliente (0 p/ manter): ");
+                            if (cId <= 0 || clienteDAO.buscarPorId(cId) != null) break;
+                            System.out.println("Cliente não encontrado.");
+                        }
                         if (cId > 0) v.setIdCliente(cId);
-                        vendaDAO.atualizar(v);
-                        System.out.println("Atualizada.");
+                        if (vendaDAO.atualizar(v)) {
+                            System.out.println("Atualizada.");
+                        } else {
+                            System.out.println("Não foi possível atualizar a venda.");
+                        }
                     } else System.out.println("Não encontrada.");
                     break;
                 case 4:
                     int idExcluir = InputUtil.lerInt("ID da venda a excluir: ");
                     if (vendaDAO.buscarPorId(idExcluir) != null) {
                         if (InputUtil.lerString("Confirma exclusão (excluirá os itens)? (s/n): ").equalsIgnoreCase("s")) {
-                            vendaDAO.excluir(idExcluir);
-                            System.out.println("Excluída.");
+                            if (vendaDAO.excluir(idExcluir)) {
+                                System.out.println("Excluída.");
+                            } else {
+                                System.out.println("Não foi possível excluir a venda.");
+                            }
+                        } else {
+                            System.out.println("Cancelado.");
                         }
                     } else System.out.println("Não encontrada.");
                     break;

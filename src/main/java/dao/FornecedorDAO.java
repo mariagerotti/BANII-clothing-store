@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class FornecedorDAO {
 
-    public void inserir(Fornecedor fornecedor) {
+    public boolean inserir(Fornecedor fornecedor) {
         String sql = "INSERT INTO fornecedor (nome, cnpj, telefone, email, endereco) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -24,9 +24,10 @@ public class FornecedorDAO {
             stmt.setString(3, fornecedor.getTelefone());
             stmt.setString(4, fornecedor.getEmail());
             stmt.setString(5, fornecedor.getEndereco());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao inserir fornecedor: " + e.getMessage());
+            return false;
         }
     }
 
@@ -75,7 +76,7 @@ public class FornecedorDAO {
         return fornecedores;
     }
 
-    public void atualizar(Fornecedor fornecedor) {
+    public boolean atualizar(Fornecedor fornecedor) {
         String sql = "UPDATE fornecedor SET nome = ?, cnpj = ?, telefone = ?, email = ?, endereco = ? WHERE id_fornecedor = ?";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -85,20 +86,22 @@ public class FornecedorDAO {
             stmt.setString(4, fornecedor.getEmail());
             stmt.setString(5, fornecedor.getEndereco());
             stmt.setInt(6, fornecedor.getIdFornecedor());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao atualizar fornecedor: " + e.getMessage());
+            return false;
         }
     }
 
-    public void excluir(int id) {
+    public boolean excluir(int id) {
         String sql = "DELETE FROM fornecedor WHERE id_fornecedor = ?";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao excluir fornecedor: " + e.getMessage());
+            return false;
         }
     }
 }

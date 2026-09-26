@@ -15,14 +15,15 @@ import java.util.List;
  */
 public class MarcaDAO {
 
-    public void inserir(Marca marca) {
+    public boolean inserir(Marca marca) {
         String sql = "INSERT INTO marca (nome) VALUES (?)";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, marca.getNome());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao inserir marca: " + e.getMessage());
+            return false;
         }
     }
 
@@ -63,26 +64,28 @@ public class MarcaDAO {
         return marcas;
     }
 
-    public void atualizar(Marca marca) {
+    public boolean atualizar(Marca marca) {
         String sql = "UPDATE marca SET nome = ? WHERE id_marca = ?";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, marca.getNome());
             stmt.setInt(2, marca.getIdMarca());
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao atualizar marca: " + e.getMessage());
+            return false;
         }
     }
 
-    public void excluir(int id) {
+    public boolean excluir(int id) {
         String sql = "DELETE FROM marca WHERE id_marca = ?";
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erro ao excluir marca: " + e.getMessage());
+            return false;
         }
     }
 }
