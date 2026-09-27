@@ -55,6 +55,24 @@ public class InputUtil {
         }
     }
 
+    /**
+     * Retorna null se a entrada for deixada em branco.
+     */
+    public static BigDecimal lerBigDecimalOpcional(String mensagem) {
+        while (true) {
+            System.out.print(mensagem);
+            String entrada = scanner.nextLine().trim().replace(',', '.');
+            if (entrada.isEmpty()) {
+                return null;
+            }
+            try {
+                return new BigDecimal(entrada);
+            } catch (NumberFormatException e) {
+                System.out.println("Formato numérico inválido. Tente novamente.");
+            }
+        }
+    }
+
     public static LocalDate lerData(String mensagem) {
         while (true) {
             System.out.print(mensagem);

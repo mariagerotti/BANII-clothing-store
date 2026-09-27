@@ -228,7 +228,7 @@ public class Main {
                     int idAtualizar = InputUtil.lerInt("ID do produto a atualizar: ");
                     Produto pAtualizar = produtoDAO.buscarPorId(idAtualizar);
                     if (pAtualizar != null) {
-                        System.out.println("Deixe em branco para manter o valor atual (no preço, digite 0 para manter).");
+                        System.out.println("Deixe em branco para manter o valor atual (em preço e tamanho, também pode digitar 0).");
                         
                         String nome = InputUtil.lerStringOpcional("Nome [" + pAtualizar.getNome() + "]: ");
                         if (!nome.isEmpty()) pAtualizar.setNome(nome);
@@ -236,12 +236,11 @@ public class Main {
                         String desc = InputUtil.lerStringOpcional("Descrição [" + pAtualizar.getDescricao() + "]: ");
                         if (!desc.isEmpty()) pAtualizar.setDescricao(desc);
                         
-                        System.out.println("Preço atual: " + pAtualizar.getPreco());
-                        BigDecimal preco = InputUtil.lerBigDecimal("Novo preço (ou digite 0 para manter): ");
-                        if (preco.compareTo(BigDecimal.ZERO) > 0) pAtualizar.setPreco(preco);
+                        BigDecimal preco = InputUtil.lerBigDecimalOpcional("Preço [" + pAtualizar.getPreco() + "] (em branco ou 0 para manter): ");
+                        if (preco != null && preco.compareTo(BigDecimal.ZERO) > 0) pAtualizar.setPreco(preco);
                         
-                        String tam = InputUtil.lerStringOpcional("Tamanho [" + pAtualizar.getTamanho() + "]: ");
-                        if (!tam.isEmpty()) pAtualizar.setTamanho(tam);
+                        String tam = InputUtil.lerStringOpcional("Tamanho [" + pAtualizar.getTamanho() + "] (em branco ou 0 para manter): ");
+                        if (!tam.isEmpty() && !tam.equals("0")) pAtualizar.setTamanho(tam);
                         
                         String cor = InputUtil.lerStringOpcional("Cor [" + pAtualizar.getCor() + "]: ");
                         if (!cor.isEmpty()) pAtualizar.setCor(cor);
