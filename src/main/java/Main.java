@@ -228,22 +228,22 @@ public class Main {
                     int idAtualizar = InputUtil.lerInt("ID do produto a atualizar: ");
                     Produto pAtualizar = produtoDAO.buscarPorId(idAtualizar);
                     if (pAtualizar != null) {
-                        System.out.println("Deixe em branco para manter o valor atual (em preço e tamanho, também pode digitar 0).");
+                        System.out.println("Deixe em branco ou digite 0 para manter o valor atual.");
                         
                         String nome = InputUtil.lerStringOpcional("Nome [" + pAtualizar.getNome() + "]: ");
-                        if (!nome.isEmpty()) pAtualizar.setNome(nome);
+                        if (!nome.isEmpty() && !nome.equals("0")) pAtualizar.setNome(nome);
                         
                         String desc = InputUtil.lerStringOpcional("Descrição [" + pAtualizar.getDescricao() + "]: ");
-                        if (!desc.isEmpty()) pAtualizar.setDescricao(desc);
+                        if (!desc.isEmpty() && !desc.equals("0")) pAtualizar.setDescricao(desc);
                         
-                        BigDecimal preco = InputUtil.lerBigDecimalOpcional("Preço [" + pAtualizar.getPreco() + "] (em branco ou 0 para manter): ");
+                        BigDecimal preco = InputUtil.lerBigDecimalOpcional("Preço [" + pAtualizar.getPreco() + "]: ");
                         if (preco != null && preco.compareTo(BigDecimal.ZERO) > 0) pAtualizar.setPreco(preco);
                         
-                        String tam = InputUtil.lerStringOpcional("Tamanho [" + pAtualizar.getTamanho() + "] (em branco ou 0 para manter): ");
+                        String tam = InputUtil.lerStringOpcional("Tamanho [" + pAtualizar.getTamanho() + "]: ");
                         if (!tam.isEmpty() && !tam.equals("0")) pAtualizar.setTamanho(tam);
                         
                         String cor = InputUtil.lerStringOpcional("Cor [" + pAtualizar.getCor() + "]: ");
-                        if (!cor.isEmpty()) pAtualizar.setCor(cor);
+                        if (!cor.isEmpty() && !cor.equals("0")) pAtualizar.setCor(cor);
                         
                         if (produtoDAO.atualizar(pAtualizar)) {
                             System.out.println("Produto atualizado com sucesso!");
